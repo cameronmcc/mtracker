@@ -41,7 +41,8 @@ class User(models.Model):
     
     # messages_created = list of messages this user started
     # past_messages = list of all past messages associated with this user
-    # current_tickets = 
+    # created_tickets = list of tickets created by user
+    # current_tickets = list of tickets assigned to user
 
     objects = UserManager()
 
@@ -53,8 +54,8 @@ class UserMessage(models.Model):
     message = models.CharField(max_length=500)
 
     message_creator = models.ForeignKey('User', related_name="messages_created", on_delete = models.CASCADE))
-    chatroom = models.ForeignKey('User', related_name="past_messages", on_delete = models.CASCADE))
-
+    chatroom = models.ForeignKey('ChatRoom', related_name="past_messages", on_delete = models.CASCADE, null=True))
+    ticket_chat = models.ForeignKey('Ticket', related_name="past_messages", on_delete = models.CASCADE, null=True))
     objects = UserMessageManager()
 
     #created_chatrooms = list of chats user1 has started
@@ -76,22 +77,14 @@ class ChatRoom(models.Models):
 class Ticket(models.Model):
     task = models.CharField(max_length=50)
     description = models.CharField(max_length=600)
+    completed = models.BooleanField()
     
     Admin_creator = models.ForeignKey('User', related_name="created_tickets", on_delete = models.CASCADE))
     assigned_user = models.ForeignKey('User', related_name="current_tickets", on_delete = models.CASCADE))
 
-
+    # past_messages = list of messages associated with this ticket
 
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-# class TicketMessage(models.Model):
-#     title = models.CharField(max_length=50)
-#     content = models.CharField(max_length=600)
-
-
-
-
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
