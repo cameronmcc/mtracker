@@ -34,13 +34,58 @@ def login(request):
         messages.error(request, "Invalid credentials")
         return redirect('/')
     messages.error(request, "Email doesn't exist, register an account")
-    return redirect('/')
+    return redirect('/dashboard')
 
 def dashboard(request):
     context = {
-        "all_quotes" : Quote.objects.all(),
+        "all_quotes" : Ticket.objects.all(),
         "current_user" : User.objects.get(id=request.session['user_id']),
         "all_users" : User.objects.all()
     }
     return render(request, "dashboard.html", context)
 
+def admin(request):
+    context = {
+        "all_users" : User.objects.all(),
+        "current_user" : User.objects.get(id=request.session['user_id'])
+    }
+    return render(request, "admin.html", context)
+
+def user(request, user_id):
+    context = {
+        "one_user" : User.objects.get(id=user_id)
+    }
+    return render(request, "user.html", context)
+
+def edit(request, user_id):
+    context = {
+        "one_user" : User.objects.get(id=user_id)
+    }
+    return render(request, "edit.html", context)
+
+def updateUser(request, user_id):
+    errors = User.objects.validate_register(request.POST)
+    if errors:
+        for key, value in errors.items():
+            messages.error(request, value)
+        return redirect(f"/users/{user_id}/edit")
+
+    update_user = User.objects.get(id = user_id)
+    hashed_pw = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt() ).decode()
+
+    update_user.first_name = request.POST['first_name']
+    update_user.last_name = request.POST['last_name']
+    update_user.email = request.POST['email']
+    update_user.password = hashed_pw
+    update_user.save()
+    return redirect(f"/users/{user_id}")
+
+
+def logout(request):
+    request.session.clear()
+    return redirect('/')
+
+def delete(request, ticket_id):
+    this_ticket = Ticket.objects.get(id= ticket_id)
+    this_ticket.delete()
+    return redirect("/dashboard")

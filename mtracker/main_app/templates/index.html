@@ -6,43 +6,8 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Welcome! Sign in to manage your jobs!</h1>
-    <div>
-        <h2>Register</h2>
-        <form action ='/register' method ="post">
-            {% csrf_token %}
-            <p>
-                First name:
-                <input type="text" name="first_name" id="" placeholder = "John">
-            </p>
-            <p>
-                Last name:
-                <input type="text" name="last_name" id="" placeholder = "Appleseed">
-            </p>
-            <p>
-                Email:
-                <input type="text" name="email" id="" placeholder = "johnnyappleseed@gmail.com">
-            </p>
-            <p>
-                Password:
-                <input type="password" name="password" id="">
-            </p>
-            <p>
-                Confirm password:
-                <input type="password" name="confirm_password" id="">
-            </p>
-            <button type="submit">Register</button>
-        </form>
-    </div>
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Error: {% endif %}
-            {{ message }}
-        </li>
-        {% endfor %}
-    </ul>
+    <h1>Welcome to mTracker! Sign in to manage your project!</h1>
+
     {% endif %}
     <h2>Login</h2>
     <form action ='/login' method ="post">
@@ -57,6 +22,16 @@
         </p>
         <button type="submit">Log in</button>
     </form>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Error: {% endif %}
+            {{ message }}
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="/register">Register an account</a>
 
 </body>
 </html>
