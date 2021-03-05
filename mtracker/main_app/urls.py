@@ -10,6 +10,8 @@ urlpatterns = [
     path("create/ticket", views.createTicket),
     path("dashboard", views.dashboard),
     path("ticket/<ticket_id>", views.viewTicket),
+    path("ticket/<int:ticket_id>/complete", views.completeTicket),
+    path("ticket/<int:ticket_id>/sendmessage", views.sendTicketMessage),
     path("chats", views.chats),
     path("admin", views.admin),
     path("user/<int:user_id>/edit", views.edit),

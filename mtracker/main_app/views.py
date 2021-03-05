@@ -49,8 +49,11 @@ def login(request):
     messages.error(request, "Email doesn't exist, register an account")
     return redirect('/')
 
-def createTicket(request):
-    return render(request, "")
+def completeTicket(request, ticket_id):
+    complete_ticket = Ticket.objects.get(id=ticket_id)
+    complete_ticket.completed = True
+    complete_ticket.save()
+    return redirect("/dashboard")
 
 def admin(request):
     context = {
@@ -81,6 +84,16 @@ def admin(request):
     }
     return render(request, "admin.html", context)
 
+
+def viewTicket(request, ticket_id):
+    context = {
+        "one_ticket" : Ticket.objects.get(id=ticket_id),
+        "current_user" : User.objects.get(id=request.session['user_id']),
+        "all_users" : User.objects.all(),
+        "all_messages" : Message.objects.all()
+    }
+    return render(request, "ticket.html", context)
+
 def newTicket(request):
     context = {
         "all_users" : User.objects.all(),
@@ -88,19 +101,23 @@ def newTicket(request):
     }
     return render(request, "create_ticket.html", context)
 
-def viewTicket(request, ticket_id):
-    context = {
-        "one_ticket" : Ticket.objects.get(id=ticket_id),
-        "current_user" : User.objects.get(id=request.session['user_id']),
-        "all_users" : User.objects.all()
-    }
-    return render(request, "ticket.html", context)
+def sendTicketMessage(request, ticket_id):
+    print(request.POST)
+    errors = Message.objects.validate_message(request.POST)
+    if errors:
+        for key, value in errors.items():
+            messages.error(request, value)
+        return redirect(f"ticket/{ticket_id}")
+    else:
+        current_user = User.objects.get(id=request.session['user_id'])
+        new_message = Message.objects.create(
+            message = request.POST['message'],
+            message_creator = current_user,
+            ticket_chat = Ticket.objects.get(id=ticket_id)
+        )
+        return redirect(f"/ticket/{ticket_id}")
 
 def createTicket(request):
-    # context = {
-    #     "all_users" : User.objects.all(),
-    #     "current_user" : User.objects.get(id=request.session['user_id'])
-    # }
     print(request.POST)
     errors = Ticket.objects.validate_ticket(request.POST)
     if errors:
@@ -148,6 +165,8 @@ def updateUser(request, user_id):
     update_user.password = hashed_pw
     update_user.save()
     return redirect(f"/user/{user_id}")
+
+    
 
 
 def logout(request):

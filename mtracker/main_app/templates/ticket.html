@@ -29,20 +29,49 @@
     <div class ="displays">
         <P> ID: {{one_ticket.id}}</P>
         <BR>
-            <P> Task name {{one_ticket.task}}</P>
+            <P> Task name: {{one_ticket.task}}</P>
             <P> Task Description: {{one_ticket.description}}</P></p>
             <P> Task Completed?: {{one_ticket.completed}}</P></p>
-            {% if current_user.id == ticket.assigned_user.id %}
-                <a href="/ticket/{{ticket.id}}/complete">Mark as completed?</a>
+            {% if current_user.id == one_ticket.assigned_user.id %}
+                {% if one_ticket.completed == False %}
+                    <a href="/ticket/{{one_ticket.id}}/complete">Mark as completed?</a>
+                    <p>Discuss this ticket with the Admin:</p>
+                    <form action = "/ticket/{{one_ticket.id}}/sendmessage" method = "post">
+                    {% csrf_token %}
+                        <textarea type="textarea" name="message" id="" placeholder = ""></textarea>
+                        <button type="submit">Send Message</button>
+                        
+                    </form>
+                {% endif %}
             {% endif %}
             {% if current_user.user_level == 9 %}
                 <a href="/ticket/{{ticket.id}}/complete">Mark as completed?</a>
                 <a href="/admin">Admin Page</a>
                 <a href="/ticket/{{ticket.id}}/delete">Delete</a>
+                <p>Discuss this ticket with the assigned User:</p>
+                <form action = "/ticket/{{one_ticket.id}}/sendmessage" method = "post">
+                {% csrf_token %}
+                    <textarea type="textarea" name="message" id="" placeholder = ""></textarea>
+                    <button type="submit">Send Message</button>
+                    
+                </form>
+                {% for message in all_messages %}
+                    <p>{{message.message}}</p>
+                {% endfor %}
+                <BR>
             {% endif %}
-            <BR>
             </div>
             <a id="back" href="/dashboard">Back to dashboard</a>
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Error: {% endif %}
+                    {{ message }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
     
 </body>
 </html>
