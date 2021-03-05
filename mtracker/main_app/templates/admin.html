@@ -10,11 +10,31 @@
     * {
         font-family: 'Roboto', sans-serif;
     }
+    #logout {
+        float: right;
+        margin: 15px;
+    }
+    h1 {
+    display: inline-block;
+    } 
     </style>
 </head>
 <body>
     <h1>Welcome to the Admin page.</h1>
+    <a id="logout" href="logout">Logout</a> 
+    <BR><a href = "/new/ticket">Create a new ticket</a>
     <h2>Users:</h2>
+    {% for user in all_users %}
+    <div class ="displays">
+        <P> Name: {{user.first_name}} {{user.last_name}}</P>
+        <P> email: {{user.email}}</P>
+        <P> User Level: {{user.user_level}}</P>
+        {% if current_user.user_level == 9 %}
+            <a href="/user/{{user.id}}">View User</a>
+        {% endif %}
+        <BR>
+    </div>
+{% endfor %}
     <h2>Tickets:</h2>
     {% for ticket in all_tickets %}
     <div class ="displays">
@@ -22,17 +42,14 @@
         <P> Description: {{ticket.description}}</P>
         <P> Completed?: {{ticket.completed}}</P>
         <p> Assigned to: {{ticket.assigned_user.first_name}} {{ticket.assigned_user.last_name}}</p>
-        {% if current_user.id == ticket.assigned_user.id %}
+        {% if current_user.id == ticket.assigned_user.id or current_user.user_level == 9 %}
             <a href="/ticket/{{ticket.id}}">View Ticket</a>
         {% endif %}
         {% if current_user.user_level == 9 %}
-            <a href="/ticket/{{ticket.id}}">View Ticket</a>
             <a href="/ticket/{{ticket.id}}/delete">Delete</a>
         {% endif %}
         <BR>
     </div>
-{% endfor %}
-    <a href = "/new/ticket">Create a new ticket</a>
-    
+{% endfor %}    
 </body>
 </html>

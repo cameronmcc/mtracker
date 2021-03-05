@@ -84,7 +84,6 @@ def admin(request):
     }
     return render(request, "admin.html", context)
 
-
 def viewTicket(request, ticket_id):
     context = {
         "one_ticket" : Ticket.objects.get(id=ticket_id),
@@ -137,15 +136,21 @@ def createTicket(request):
         
     return redirect("/admin")
 
-def user(request, user_id):
+def viewUser(request, user_id):
+    # this_user = User.objects.get(id=user_id)
+    # tickets_completed = this_user.
+    # tickets_completed = len(this_user.
     context = {
-        "one_user" : User.objects.get(id=user_id)
+        "one_user" : User.objects.get(id=user_id),
+        "all_messages" : Message.objects.all()
     }
+
     return render(request, "user.html", context)
 
-def edit(request, user_id):
+def editUser(request, user_id):
     context = {
         "one_user" : User.objects.get(id=user_id)
+
     }
     return render(request, "edit.html", context)
 
@@ -166,8 +171,21 @@ def updateUser(request, user_id):
     update_user.save()
     return redirect(f"/user/{user_id}")
 
-    
-
+# def sendUserMessage(request, user_id):
+#     print(request.POST)
+#     errors = Message.objects.validate_message(request.POST)
+#     if errors:
+#         for key, value in errors.items():
+#             messages.error(request, value)
+#         return redirect(f"user/{user_id}")
+#     else:
+#         current_user = User.objects.get(id=request.session['user_id'])
+#         new_message = Message.objects.create(
+#             message = request.POST['message'],
+#             message_creator = current_user,
+#             chatroom = ,
+#         )
+#         return redirect(f"user/{user_id}")
 
 def logout(request):
     request.session.clear()

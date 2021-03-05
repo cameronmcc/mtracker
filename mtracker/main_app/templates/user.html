@@ -13,17 +13,19 @@
 }
 </style>
 <body>
-    <h1>{{one_user.first_name}}'s Tickets</h1>
+    <h1>{{one_user.first_name}}'s Profile</h1>
     <a id="logout" href="logout">Logout</a> 
-    {% for ticket in one_user.tickets.all %}
     <div class ="displays">
-        <P> ID: {{ticket.id}}</P>
+        <P> ID: {{one_user.id}}</P>
         <BR>
-            <P> ID: {{ticket.author}}</P>
-            <P> ID: {{ticket.quote}}</P></p>
+            <P> Name: {{one_user.first_name}} {{one_user.last_name}}</P>
+            <P> Email: {{one_user.email}}</P></p>
             <BR>
-            </div>
-            {% endfor %}
+            </div>            
+            <a id="chat" href='/user/{{one_user.id}}/chat'>Send {{one_user.first_name}} a message</a>
+            <br><br>
+            <a id="edit" href='/user/{{one_user.id}}/edit'>Edit User</a>
             <a id="back" href="/dashboard">Back to dashboard</a>
+
 </body>
 </html>

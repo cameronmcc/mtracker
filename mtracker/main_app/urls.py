@@ -14,7 +14,9 @@ urlpatterns = [
     path("ticket/<int:ticket_id>/sendmessage", views.sendTicketMessage),
     path("chats", views.chats),
     path("admin", views.admin),
-    path("user/<int:user_id>/edit", views.edit),
+    path("user/<int:user_id>", views.viewUser),
+    path("user/<int:user_id>/edit", views.editUser),
     path("user/<int:user_id>/update", views.updateUser),
+    # path("user/<int:user_id>/sendmessage", views.sendUserMessage),
     path("logout", views.logout)
 ]
