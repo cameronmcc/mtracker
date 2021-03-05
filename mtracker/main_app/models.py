@@ -72,18 +72,18 @@ class User(models.Model):
 class Message(models.Model):
     message = models.CharField(max_length=500)
 
-    message_creator = models.ForeignKey('User', related_name="messages_created", on_delete = models.CASCADE))
-    chatroom = models.ForeignKey('ChatRoom', related_name="past_messages", on_delete = models.CASCADE, null=True))
-    ticket_chat = models.ForeignKey('Ticket', related_name="past_messages", on_delete = models.CASCADE, null=True))
+    message_creator = models.ForeignKey('User', related_name="messages_created", on_delete = models.CASCADE)
+    chatroom = models.ForeignKey('ChatRoom', related_name="past_messages", on_delete = models.CASCADE, null=True)
+    ticket_chat = models.ForeignKey('Ticket', related_name="past_messages", on_delete = models.CASCADE, null=True)
     
     objects = MessageManager()
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-class ChatRoom(models.Models):
-    User1 = models.ForeignKey('User', related_name="created_chatrooms", on_delete = models.CASCADE))
-    User2 = models.ForeignKey('User', related_name="joined_chatrooms", on_delete = models.CASCADE))
+class ChatRoom(models.Model):
+    User1 = models.ForeignKey('User', related_name="created_chatrooms", on_delete = models.CASCADE)
+    User2 = models.ForeignKey('User', related_name="joined_chatrooms", on_delete = models.CASCADE)
 
     objects = ChatRoomValidator()
 
@@ -98,8 +98,8 @@ class Ticket(models.Model):
     description = models.CharField(max_length=600)
     completed = models.BooleanField()
     
-    Admin_creator = models.ForeignKey('User', related_name="created_tickets", on_delete = models.CASCADE))
-    assigned_user = models.ForeignKey('User', related_name="current_tickets", on_delete = models.CASCADE))
+    Admin_creator = models.ForeignKey('User', related_name="created_tickets", on_delete = models.CASCADE)
+    assigned_user = models.ForeignKey('User', related_name="current_tickets", on_delete = models.CASCADE)
 
     # past_messages = list of messages associated with this ticket
 

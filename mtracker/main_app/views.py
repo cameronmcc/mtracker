@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import User
+from .models import User, Message, ChatRoom, Ticket
 import bcrypt
 
 def index(request):
@@ -15,13 +15,19 @@ def register(request):
         return redirect("/")
     hashed_pw = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt() ).decode()
     print(hashed_pw)
+    if len(User.objects.all()) < 1 :
+        auto_admin = 9
+    else:
+        auto_admin = 1
     new_user = User.objects.create(
         first_name = request.POST['first_name'],
         last_name = request.POST['last_name'],
         email = request.POST['email'],
-        password = hashed_pw
+        password = hashed_pw,
+        user_level = auto_admin
     )
     request.session['user_id'] = new_user.id
+    print(new_user)
     return redirect("/dashboard")
 
 def login(request):
@@ -42,6 +48,10 @@ def dashboard(request):
         "current_user" : User.objects.get(id=request.session['user_id']),
         "all_users" : User.objects.all()
     }
+    return render(request, "dashboard.html", context)
+
+def chats(request):
+
     return render(request, "dashboard.html", context)
 
 def admin(request):
