@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+    * {
+        font-family: 'Roboto', sans-serif;
+    }
+    #logout {
+        float: right;
+        margin: 15px;
+    }
+    h1 {
+    display: inline-block;
+    } 
+    </style>
+</head>
+
+<link rel="preconnect" href="https://fonts.gstatic.com"> 
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+<body>
+    <h1>Ticket </h1>
+    <a id="logout" href="/logout">Logout</a> 
+    <div class ="displays">
+        <P> ID: {{one_ticket.id}}</P>
+        <BR>
+            <P> Task name {{one_ticket.task}}</P>
+            <P> Task Description: {{one_ticket.description}}</P></p>
+            <P> Task Completed?: {{one_ticket.completed}}</P></p>
+            {% if current_user.id == ticket.assigned_user.id %}
+                <a href="/ticket/{{ticket.id}}/complete">Mark as completed?</a>
+            {% endif %}
+            {% if current_user.user_level == 9 %}
+                <a href="/ticket/{{ticket.id}}/complete">Mark as completed?</a>
+                <a href="/admin">Admin Page</a>
+                <a href="/ticket/{{ticket.id}}/delete">Delete</a>
+            {% endif %}
+            <BR>
+            </div>
+            <a id="back" href="/dashboard">Back to dashboard</a>
+    
+</body>
+</html>

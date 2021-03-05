@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    #logout {
+        float: right;
+        margin: 15px;
+    }
+    h1 {
+    display: inline-block;
+    } 
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+    * {
+        font-family: 'Roboto', sans-serif;
+    }
+    </style>
+</head>
+<body>
+    <h1>Update your User infotmation</h1>
+    <a id="logout" href="logout">Logout</a> 
+    <BR>
+    <form action ='/user/{{one_user.id}}/update' method ="post">
+        {% csrf_token %}
+        <p>
+            First name:
+            <input type="text" name="first_name" id="" placeholder = "">
+        </p>
+        <p>
+            Last name:
+            <input type="text" name="last_name" id="" placeholder = "">
+        </p>
+        <p>
+            Email:
+            <input type="text" name="email" id="" placeholder = "">
+        </p>
+        <p>
+            Password:
+            <input type="password" name="password" id="">
+        </p>
+        <p>
+            Confirm password:
+            <input type="password" name="confirm_password" id="">
+        </p>
+        <button type="submit">Update</button>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Error: {% endif %}
+                {{ message }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </form>
+    <a id="back" href="/dashboard">Back to dashboard</a>
+</body>
+</html>

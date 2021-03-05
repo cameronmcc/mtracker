@@ -6,6 +6,9 @@ import bcrypt
 def index(request):
     return render(request, 'index.html')
 
+def regindex(request):
+    return render(request, 'register.html')
+
 def register(request):
     errors = User.objects.validate_register(request.POST)
 
@@ -28,6 +31,8 @@ def register(request):
     )
     request.session['user_id'] = new_user.id
     print(new_user)
+    if new_user.user_level == 9:
+        return redirect("/admin")
     return redirect("/dashboard")
 
 def login(request):
@@ -36,18 +41,32 @@ def login(request):
         logged_user = user[0]
         if bcrypt.checkpw(request.POST['password'].encode(), logged_user.password.encode()):
             request.session['user_id'] = logged_user.id
+            if logged_user.user_level == 9:
+                return redirect("/admin")
             return redirect("/dashboard")
         messages.error(request, "Invalid credentials")
         return redirect('/')
     messages.error(request, "Email doesn't exist, register an account")
-    return redirect('/dashboard')
+    return redirect('/')
+
+def createTicket(request):
+    return render(request, "")
+
+def admin(request):
+    context = {
+        "all_tickets" : Ticket.objects.all(),
+        "all_users" : User.objects.all(),
+        "current_user" : User.objects.get(id=request.session['user_id'])
+    }
+    return render(request, "admin.html", context)
 
 def dashboard(request):
     context = {
-        "all_quotes" : Ticket.objects.all(),
+        "all_tickets" : Ticket.objects.all(),
         "current_user" : User.objects.get(id=request.session['user_id']),
         "all_users" : User.objects.all()
     }
+    print(context['current_user'].first_name)
     return render(request, "dashboard.html", context)
 
 def chats(request):
@@ -56,10 +75,50 @@ def chats(request):
 
 def admin(request):
     context = {
+        "all_tickets" : Ticket.objects.all(),
         "all_users" : User.objects.all(),
         "current_user" : User.objects.get(id=request.session['user_id'])
     }
     return render(request, "admin.html", context)
+
+def newTicket(request):
+    context = {
+        "all_users" : User.objects.all(),
+        "current_user" : User.objects.get(id=request.session['user_id'])
+    }
+    return render(request, "create_ticket.html", context)
+
+def viewTicket(request, ticket_id):
+    context = {
+        "one_ticket" : Ticket.objects.get(id=ticket_id),
+        "current_user" : User.objects.get(id=request.session['user_id']),
+        "all_users" : User.objects.all()
+    }
+    return render(request, "ticket.html", context)
+
+def createTicket(request):
+    # context = {
+    #     "all_users" : User.objects.all(),
+    #     "current_user" : User.objects.get(id=request.session['user_id'])
+    # }
+    print(request.POST)
+    errors = Ticket.objects.validate_ticket(request.POST)
+    if errors:
+        for key, value in errors.items():
+            messages.error(request, value)
+        return redirect("/new/ticket")
+    else:
+        current_user = User.objects.get(id=request.session['user_id'])
+        assigned_user = User.objects.get(id=request.POST['assigned_user'])
+        new_ticket = Ticket.objects.create(
+            task = request.POST['task'],
+            description = request.POST['description'],
+            completed = False,
+            Admin_creator = current_user,
+            assigned_user = assigned_user
+        )
+        
+    return redirect("/admin")
 
 def user(request, user_id):
     context = {
@@ -78,7 +137,7 @@ def updateUser(request, user_id):
     if errors:
         for key, value in errors.items():
             messages.error(request, value)
-        return redirect(f"/users/{user_id}/edit")
+        return redirect(f"/user/{user_id}/edit")
 
     update_user = User.objects.get(id = user_id)
     hashed_pw = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt() ).decode()
@@ -88,7 +147,7 @@ def updateUser(request, user_id):
     update_user.email = request.POST['email']
     update_user.password = hashed_pw
     update_user.save()
-    return redirect(f"/users/{user_id}")
+    return redirect(f"/user/{user_id}")
 
 
 def logout(request):

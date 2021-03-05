@@ -5,9 +5,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+    * {
+        font-family: 'Roboto', sans-serif;
+    }
+    </style>
 </head>
 <body>
     <h1>Welcome to the Admin page.</h1>
+    <h2>Users:</h2>
+    <h2>Tickets:</h2>
+    {% for ticket in all_tickets %}
+    <div class ="displays">
+        <P> Title: {{ticket.task}}</P>
+        <P> Description: {{ticket.description}}</P>
+        <P> Completed?: {{ticket.completed}}</P>
+        <p> Assigned to: {{ticket.assigned_user.first_name}} {{ticket.assigned_user.last_name}}</p>
+        {% if current_user.id == ticket.assigned_user.id %}
+            <a href="/ticket/{{ticket.id}}">View Ticket</a>
+        {% endif %}
+        {% if current_user.user_level == 9 %}
+            <a href="/ticket/{{ticket.id}}">View Ticket</a>
+            <a href="/ticket/{{ticket.id}}/delete">Delete</a>
+        {% endif %}
+        <BR>
+    </div>
+{% endfor %}
+    <a href = "/new/ticket">Create a new ticket</a>
     
 </body>
 </html>

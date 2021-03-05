@@ -5,9 +5,45 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+    #logout {
+        float: right;
+        margin: 15px;
+    }
+    h1 {
+    display: inline-block;
+    } 
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+    * {
+        font-family: 'Roboto', sans-serif;
+    }
+    </style>
 </head>
 <body>
-    <h1>Available Tickets</h1>
+    <h1>Hello, {{current_user.first_name}}! Available Tickets:</h1>
+    <a id="logout" href="logout">Logout</a> 
+    <BR>
+    <a href="/user/{{current_user.id}}/edit">Edit Profile</a>
+    {% if current_user.user_level == 9 %}
+        <a href="/admin">Admin Page</a>
+    {% endif %}
+    
+    {% for ticket in all_tickets %}
+        <div class ="displays">
+            <P> Title: {{ticket.task}}</P>
+            <P> Description: {{ticket.description}}</P>
+            <P> Completed?: {{ticket.completed}}</P>
+            <p> Assigned to: {{ticket.assigned_user.first_name}} {{ticket.assigned_user.last_name}}</p>
+            {% if current_user.id == ticket.assigned_user.id %}
+                <a href="/ticket/{{ticket.id}}">View Ticket</a>
+            {% endif %}
+            {% if current_user.user_level == 9 %}
+                <a href="/ticket/{{ticket.id}}">View Ticket</a>
+                <a href="/ticket/{{ticket.id}}/delete">Delete</a>
+            {% endif %}
+            <BR>
+        </div>
+    {% endfor %}
     
 </body>
 </html>

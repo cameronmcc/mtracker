@@ -5,6 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+    * {
+        font-family: 'Roboto', sans-serif;
+    }
+    </style>
 </head>
 <body>
     <h1>Create an account</h1>
@@ -24,13 +30,14 @@
         </p>
         <p>
             Password:
+        
             <input type="password" name="password" id="">
         </p>
         <p>
             Confirm password:
             <input type="password" name="confirm_password" id="">
         </p>
-        <button type="submit">Register</button>
+        <button type="submit">Create</button>
     </form>
 </div>
 {% if messages %}

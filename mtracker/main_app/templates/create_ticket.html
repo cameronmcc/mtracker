@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+    * {
+        font-family: 'Roboto', sans-serif;
+    }
+    textarea {
+  width: 155px;
+  height: 100px;
+}
+    h1 {
+    display: inline-block;
+    }
+    #logout {
+        float: right;
+        margin: 15px;
+    }
+    </style>
+</head>
+
+<link rel="preconnect" href="https://fonts.gstatic.com"> 
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+<body>
+    <h1>Create a Ticket:</h1>
+    <a id="logout" href="logout">Logout</a> 
+    <form action ='/create/ticket' method ="post">
+        {% csrf_token %}
+        <p>
+            Name:
+            <input type="text" name="task" id="" placeholder = "">
+        </p>
+        <p>
+            description:
+            <textarea type="textarea" name="description" id="" placeholder = ""></textarea>
+        </p>
+        <p>
+            Assigned User:
+            <select name="assigned_user">
+                {% for user in all_users %}
+                    <option value="{{user.id}}">{{user.first_name}} {{user.last_name}}</option>
+                {% endfor %}
+            </select>
+        </p>
+
+        <button type="submit">Create</button>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Error: {% endif %}
+                {{ message }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </form>
+    <a id="back" href="/dashboard">Back to dashboard</a>
+    
+</body>
+</html>

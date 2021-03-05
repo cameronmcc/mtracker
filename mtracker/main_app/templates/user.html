@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+* {
+    font-family: 'Roboto', sans-serif;
+}
+</style>
+<body>
+    <h1>{{one_user.first_name}}'s Tickets</h1>
+    <a id="logout" href="logout">Logout</a> 
+    {% for ticket in one_user.tickets.all %}
+    <div class ="displays">
+        <P> ID: {{ticket.id}}</P>
+        <BR>
+            <P> ID: {{ticket.author}}</P>
+            <P> ID: {{ticket.quote}}</P></p>
+            <BR>
+            </div>
+            {% endfor %}
+            <a id="back" href="/dashboard">Back to dashboard</a>
+</body>
+</html>

@@ -32,7 +32,6 @@ class MessageManager(models.Manager):
         if len(post_data['message']) < 3:
             errors['message'] = "Message must be longer than 3 characters."
 
-
 class TicketManager(models.Manager):
     def validate_ticket(self, post_data):
         errors = {}
@@ -68,7 +67,6 @@ class User(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
 class Message(models.Model):
     message = models.CharField(max_length=500)
 
@@ -91,7 +89,7 @@ class ChatRoom(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    #try django channels later
 
 class Ticket(models.Model):
     task = models.CharField(max_length=50)
